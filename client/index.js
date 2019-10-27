@@ -5,9 +5,13 @@ import ApolloClient from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import SongList from './components/song-list';
 import SongCreate from './components/song-create';
+import SongDetail from './components/song-detail';
 import App from './components/app';
+import './style/style.css'
 
-const client = new ApolloClient({});
+const client = new ApolloClient({
+  dataIdFromObject: o => o.id
+});
 
 const Root = () => {
   return (
@@ -16,7 +20,8 @@ const Root = () => {
         <Route path="/" component={App}>
           <IndexRoute component={SongList} />
         </Route>
-        <Route path="song/new" component={SongCreate} />
+        <Route path="songs/new" component={SongCreate} />
+        <Route path="songs/:id" component={SongDetail} />
       </Router>
     </ApolloProvider>
   )
