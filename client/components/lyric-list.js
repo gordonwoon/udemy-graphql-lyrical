@@ -1,14 +1,20 @@
-import React, { Component } from 'react'
-import mutation from '../mutations/like-lyric';
-import { graphql } from 'react-apollo';
+import React, { Component } from "react";
+import mutation from "../mutations/like-lyric";
+import { graphql } from "react-apollo";
 
 class LyricList extends Component {
-  onLike(id) {
+  onLike(id, likes) {
     this.props.mutate({
-      variables: {
-        id
+      variables: { id },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        likeLyric: {
+          id,
+          __typename: 'LyricType',
+          likes: likes + 1
+        }
       }
-    })
+    });
   }
   renderList() {
     const { lyrics = [] } = this.props;
@@ -16,23 +22,19 @@ class LyricList extends Component {
       <li key={id} className="collection-item">
         {content}
         <div className="vote-box">
-        <i
-          className="material-icons clickable"
-          onClick={() => this.onLike(id)}
-        >
-          thumb_up
-        </i>
-        {likes}
+          <i
+            className="material-icons clickable"
+            onClick={() => this.onLike(id, likes)}
+          >
+            thumb_up
+          </i>
+          {likes}
         </div>
       </li>
-    ))
+    ));
   }
   render() {
-    return (
-      <ul className="collection">
-        {this.renderList()}
-      </ul>
-    )
+    return <ul className="collection">{this.renderList()}</ul>;
   }
 }
 
